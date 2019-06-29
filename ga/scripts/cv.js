@@ -14,23 +14,30 @@ var population = [];
 var fitness = [];
 var maxRotas = 10;
 var mutationRate = 0.01;
+var fullRutes = false;
+
+var startTime = 0;
+var bestTime = "";
+var oldBestGaDistance = Infinity;
 
 function confirmarClick(){
     let val = document.getElementById("qtdNodes").value;
     let popSize = document.getElementById("popSize").value;
     let mutation = document.getElementById("mutation").value;
     var maxRoutes = document.getElementById("maxRotas").value;
+    fullRutes = document.getElementById("chkFullRoutes").checked;
 
     val = parseInt(val);
     popSize = parseInt(popSize); 
     mutation = parseFloat(mutation);
     maxRoutes = parseInt(maxRoutes);
+    
 
     if(isNaN(val)) val = 7;
     if(isNaN(popSize)) popSize = 100;
     if(isNaN(mutation)) mutation = 0.1
     if(isNaN(maxRoutes)) maxRoutes = int(totalNodes*1.2);
- 
+    
     totalNodes = val;
     totalPopulation = popSize;
     mutationRate = mutation;
@@ -40,7 +47,7 @@ function confirmarClick(){
     gaNodes = [];
     bestGaNodes = [];
     bestGaDistance = Infinity;
-
+    oldBestGaDistance = Infinity;
     population = [];
     fitness = [];
     setup();
@@ -57,8 +64,12 @@ function setup(){
     height = innerHeight - 100;
     createCanvas(width ,height);
     createNodes(gaNodes,[width/10,width-20],[20,height/2 -40]);
-    createRotas(gaNodes);
-
+  
+    if(fullRutes){
+        createfullRoutes(gaNodes)
+    }else{
+        createRotas(gaNodes);
+    }
 
    
     cloneArray(gaNodes,bestGaNodes);
@@ -75,6 +86,7 @@ function setup(){
 
     createPopulation(population,gaNodes);
     calulateFitness();
+    startTime = Date.now();
     loop();
 }
 
@@ -91,9 +103,16 @@ function draw(){
     
     printArestas(gaNodes,0);
     
+
     if(bestGaDistance != Infinity){
-    
-        printArestas(bestGaNodes,0)
+        if(oldBestGaDistance != bestGaDistance){
+            oldBestGaDistance = bestGaDistance;
+            let tn = Date.now() - startTime;
+            bestTime = getTimeString(tn);
+            console.log(bestTime);
+        }
+
+        printArestas(bestGaNodes,0);
     }
 
 
@@ -115,7 +134,12 @@ function draw(){
     text("Population: " + population.length, 20, 3*space);
     text("Mutation Rate: " + mutationRate, 20, 4*space);
     text("Possible Routes: "+  maxRotas, 20, 5*space);
-  
+    
+    timeNow = Date.now() - startTime;
+    time = getTimeString(timeNow);
+
+    text("Best Time: "+bestTime, 20, 15*space);
+    text("Time: "+time, 20, 16*space);
     
 
 }

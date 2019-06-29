@@ -1,4 +1,79 @@
 
+
+function calulateFitness(){
+
+    for(var i = 0;i < totalPopulation;i++){
+        var currentRecord = Infinity;
+
+        var arr = getFitness(population[i]);
+        var f = arr[0];
+        var w = arr[1];
+       
+        if(w < bestGaDistance && w != -1){
+            bestGaDistance = w;
+            bestGaNodes = [];
+            cloneArray(population[i],bestGaNodes);
+            setShfitPosition(bestGaNodes,0, height/2); 
+        }
+        if(f < currentRecord){
+            currentRecord = f;
+            gaNodes = population[i];
+        }
+
+        fitness[i] = 1/(pow(f, 8) + 1);
+    }
+    
+}
+
+
+
+function calulateFitnessIgnoreRoutes(){
+
+    for(var i = 0;i < totalPopulation;i++){
+        var currentRecord = Infinity;
+
+        var w = getFitnessIgnoreArestas(population[i]);
+        
+        if(w < bestGaDistance && w != -1){
+            bestGaDistance = w;
+            bestGaNodes = [];
+            cloneArray(population[i],bestGaNodes);
+            setShfitPosition(bestGaNodes,0, height/2); 
+        }
+        if(w < currentRecord){
+            currentRecord = w;
+            gaNodes = population[i];
+        }
+
+        fitness[i] = 1/(pow(w, 8) + 1);
+    }
+    
+}
+
+
+
+function getFitnessIgnoreArestas(arr){
+
+    totalWeight = 0;
+    for(var i = 0; i<totalNodes; i ++ ){
+        pos_x1 = arr[i].position.x;
+        pos_y1 = arr[i].position.y;
+        let w = 0;
+        if (i+1<totalNodes){
+            pos_x2 = arr[i+1].position.x;
+            pos_y2 = arr[i+1].position.y;
+        }else{
+            pos_x2 = arr[0].position.x;
+            pos_y2 = arr[0].position.y;
+        }
+        w = dist(pos_x1,pos_y1,pos_x2,pos_y2);
+        w = int(w);
+        totalWeight+=w;
+    }
+    return totalWeight;
+}
+
+
 function  createPopulation(){
 
     for(var i = 0;i < totalPopulation;i++){
@@ -8,26 +83,7 @@ function  createPopulation(){
     }
 
 }
-function calulateFitness(){
-
-    for(var i = 0;i < totalPopulation;i++){
-  
-        var arr = getFitness(population[i]);
-        var f = arr[0];
-        var w = arr[1];
-        gaNodes = population[i];
-        if(w < bestGaDistance && w != -1){
-            bestGaDistance = w;
-            bestGaNodes = [];
-            cloneArray(population[i],bestGaNodes);
-            setShfitPosition(bestGaNodes,0, height/2); 
-        
-        }
-
-        fitness[i] = 1/(f+1);
-    }
-    
-}
+ 
 
 
 function normalizeFitness() {
@@ -51,23 +107,26 @@ function nextGeneration(mutation){
     }
     population = newPopulation;
 }
+
+
    
 function mutate(order,rate){
 
     for ( var i = 0; i < totalNodes; i++){
         if(random(1)<rate){
             var indexA = floor(random(order.length));
-            var indexB = floor(random(order.length));
-            swap(order,indexA,indexB);
+            var indexB = (indexA + 1) % totalNodes;
+            swap(order, indexA, indexB);
         }
     }
 }
 
-function crossOver(orderA, orderB) {
+
+
+  function crossOver(orderA, orderB) {
     var start = floor(random(orderA.length));
     var end = floor(random(start + 1, orderA.length));
     var neworder = orderA.slice(start, end);
-    // var left = totalCities - neworder.length;
     for (var i = 0; i < orderB.length; i++) {
       var city = orderB[i];
       if (!neworder.includes(city)) {
@@ -76,36 +135,8 @@ function crossOver(orderA, orderB) {
     }
     return neworder;
   }
+  
 
-  /*
-function crossOver(arrA,arrB){
-
-    let halfPart = 0;
-    if(totalNodes%2 == 0){
-        halfPart = totalNodes/2;
-    }else halfPart = int(totalNodes/2) + 1 
-
-    order = arrA.splice(0,halfPart);
-
-    for(var i = 0; i < totalNodes; i++ ){
-        contais = false;
-        for(var j = 0; j< order.length; j++){
-            if(order[j].id == arrB[i].id){
-                contais = true;
-                break;
-            }
-        }
-        if(!contais){
-            order.push(arrB[i]);
-        }
-    }
-
-    return order;
-
-
-}
-
-*/
 function getFitness(arr){
     totalFitness = 0;
     totalWeight = 0;
@@ -145,4 +176,5 @@ function pickOne(list, prob) {
     index--;
     return list[index].slice();
   }
+ 
   

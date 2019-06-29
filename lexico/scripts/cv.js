@@ -13,13 +13,17 @@ var count = 0;
 var bestLexicoDistance = Infinity;
 var bestRoutes = [];
 var bestLexicoNodes = [];
+var fullRutes = false;
 
-
+var startTime = 0;
+var bestTime = "";
+var oldBestDistance = Infinity;
 
 
 function confirmarClick(){
     let val = document.getElementById("qtdNodes").value;
     var maxRoutes = document.getElementById("maxRotas").value;
+    fullRutes = document.getElementById("chkFullRoutes").checked;
 
     val = parseInt(val);
     maxRoutes = parseInt(maxRoutes);
@@ -51,7 +55,14 @@ function setup(){
     height = innerHeight - 100;
     createCanvas(width ,height);
     createNodes(lexicoNodes,[width/10,width - 25],[40,height/2 - 40]);
-    createRotas(lexicoNodes);
+    
+    if(fullRutes){
+        createfullRoutes(lexicoNodes)
+    }else{
+        createRotas(lexicoNodes);
+    }
+
+    
 
     cloneArray(lexicoNodes,bestLexicoNodes);
     setShfitPosition(bestLexicoNodes,0,height/2);
@@ -67,7 +78,7 @@ function setup(){
 
     totalPermutations = factorial(totalNodes);
 
-    
+    startTime = Date.now();
 
     loop();
 
@@ -90,6 +101,12 @@ function draw(){
     }
 
     if(bestLexicoDistance != Infinity){
+        if(oldBestDistance != bestLexicoDistance){
+            oldBestDistance = bestLexicoDistance;
+            let tn = Date.now() - startTime;
+            bestTime = getTimeString(tn);
+            console.log(bestTime);
+        }
         printArestas(bestLexicoNodes,0)
     }
     
@@ -113,6 +130,13 @@ function draw(){
     let space = 25;
     text("Nodes: " + totalNodes, 20, 2*space+5);
     text("Possible Routes: "+  maxRotas, 20, 3*space);
+
+    timeNow = Date.now() - startTime;
+    time = getTimeString(timeNow);
+
+    text("Best Time: "+bestTime, 20, 15*space);
+    text("Time: "+time, 20, 16*space);
+    
    
 
 }

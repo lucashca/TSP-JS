@@ -25,6 +25,14 @@ var population = [];
 var fitness = [];
 var maxRotas = 10;
 var mutationRate = 0.1;
+var fullRutes = false;
+
+var startTime = 0;
+var bestTimeGa = "";
+var bestTimeLexico = "";
+var oldBestDistanceLex = Infinity;
+var oldBestDistanceGA = Infinity;
+
 
 
 function confirmarClick(){
@@ -32,7 +40,7 @@ function confirmarClick(){
     let popSize = document.getElementById("popSize").value;
     let mutation = document.getElementById("mutation").value;
     var maxRoutes = document.getElementById("maxRotas").value;
-
+    fullRutes = document.getElementById("chkFullRoutes").checked;
     val = parseInt(val);
     popSize = parseInt(popSize); 
     mutation = parseFloat(mutation);
@@ -62,6 +70,9 @@ function confirmarClick(){
 
     population = [];
     fitness = [];
+
+    startTime = Date.now();
+
     setup();
 
 }
@@ -74,7 +85,12 @@ function setup(){
     height = innerHeight - 100;
     createCanvas(width ,height);
     createNodes(lexicoNodes,[width/10,width/2 - 25],[40,height/2 - 40]);
-    createRotas(lexicoNodes);
+   
+    if(fullRutes){
+        createfullRoutes(lexicoNodes)
+    }else{
+        createRotas(lexicoNodes);
+    }
 
     cloneArray(lexicoNodes,gaNodes);
     cloneArray(lexicoNodes,bestLexicoNodes);
@@ -101,6 +117,8 @@ function setup(){
 
     createPopulation(population,gaNodes);
     calulateFitness();
+    startTime = Date.now();
+
     loop();
 
 }
@@ -128,12 +146,23 @@ function draw(){
     }
 
     if(bestLexicoDistance != Infinity){
+        if(oldBestDistanceLex != bestLexicoDistance){
+            oldBestDistanceLex = bestLexicoDistance;
+            let tn = Date.now() - startTime;
+            bestTimeLexico = getTimeString(tn);
+            
+        }
         printArestas(bestLexicoNodes,0)
     }
     
     
     if(bestGaDistance != Infinity){
-    
+        if(oldBestDistanceGA != bestGaDistance){
+            oldBestDistanceGA = bestGaDistance;
+            let tn = Date.now() - startTime;
+            bestTimeGa = getTimeString(tn);
+            
+        }
         printArestas(bestGaNodes,0)
     }
 
@@ -160,7 +189,12 @@ function draw(){
     text("Population: " + population.length, 20, 3*space);
     text("Mutation Rate: " + mutationRate, 20, 4*space);
     text("Possible Routes: "+  maxRotas, 20, 5*space);
-   
+    timeNow = Date.now() - startTime;
+    time = getTimeString(timeNow);
+    text("Best Time: "+bestTimeLexico, 20, 15*space);
+    text("Time: "+time, 20, 16*space);
+    text("Best Time: "+bestTimeGa,width/2+ 20, 15*space);
+    text("Time: "+time, width/2+ 20, 16*space);
 
 }
 

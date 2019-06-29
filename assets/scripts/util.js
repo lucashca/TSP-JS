@@ -15,7 +15,12 @@ function setShfitPosition(arr,offsetX,offsetY){
     }
 }
 
-
+function getTimeString(time){
+    var s = int(time/1000);
+    var ms = time%1000;
+    var str = s+","+ms+"s";
+    return str;
+}
 
 function createRotas(arr){
     for (var i = 0; i<totalNodes;i++){

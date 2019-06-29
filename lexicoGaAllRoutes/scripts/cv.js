@@ -95,13 +95,13 @@ function setup(){
     
 
     createPopulation(population,gaNodes);
-    calulateFitness();
+    calulateFitnessIgnoreRoutes();
     loop();
 
 }
 function draw(){
 
-    calulateFitness();
+    calulateFitnessIgnoreRoutes();
     normalizeFitness();
     nextGeneration(mutationRate);
     

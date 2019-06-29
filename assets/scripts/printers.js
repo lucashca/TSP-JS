@@ -65,7 +65,7 @@ function calcDistance(nodeA, nodeB){
 }
   
 
-function printArestasIgnoreRoutes(arr,){
+function printArestasIgnoreRoutes(arr){
 
     totalWeight = 0;
     for(var i = 0; i<totalNodes; i ++ ){
@@ -88,7 +88,6 @@ function printArestasIgnoreRoutes(arr,){
         totalWeight+=w;
     }
     return totalWeight;
-
 }
 
 function printArestas(arr,offset){
