@@ -191,10 +191,13 @@ function draw(){
     text("Possible Routes: "+  maxRotas, 20, 5*space);
     timeNow = Date.now() - startTime;
     time = getTimeString(timeNow);
-    text("Best Time: "+bestTimeLexico, 20, 15*space);
-    text("Time: "+time, 20, 16*space);
-    text("Best Time: "+bestTimeGa,width/2+ 20, 15*space);
-    text("Time: "+time, width/2+ 20, 16*space);
+   
+    text("Best Time: "+bestTimeLexico, 20, height/2-3*space);
+    text("Time: "+time, 20, height/2-2*space);
+    
+    text("Best Time: "+bestTimeGa, width/2+ 20, height/2-3*space);
+    text("Time: "+time, width/2+ 20, height/2-2*space);
+    
 
 }
 

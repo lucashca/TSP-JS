@@ -25,8 +25,6 @@ function calulateFitness(){
     
 }
 
-
-
 function calulateFitnessIgnoreRoutes(){
 
     for(var i = 0;i < totalPopulation;i++){
@@ -96,8 +94,10 @@ function normalizeFitness() {
     }
   }
 
-function nextGeneration(mutation){
+function nextGenerationOld(mutation){
     var newPopulation = [];
+      getPopulationRanked(population,fitness);
+  
     for(var i = 0; i < totalPopulation; i ++){
         var orderA = pickOne(population, fitness);
         var orderB = pickOne(population, fitness);
@@ -108,7 +108,73 @@ function nextGeneration(mutation){
     population = newPopulation;
 }
 
+function nextGeneration(mutation){
+    var newPopulation = [];
+    var popRanked = getBestPopulation(population,fitness);
+    var orderA = popRanked[0];
+    var orderB = popRanked[1];
 
+    for(var i = 0; i < totalPopulation; i ++){
+        var order = crossOver(orderA,orderB);
+        if(mutation>0){
+            mutate(order,mutation);
+        }   
+        newPopulation[i] = order;
+    
+    }
+    population = newPopulation;
+}
+
+function getBestPopulation(population,fitness){
+    pop = population.slice();
+    fit = fitness.slice();
+    
+    var res = [];
+
+    for(var l = 0; l< 2 ; l++){
+        let maior = 0;
+        let indexToRemove = -1;
+        for (var i = 0; i < pop.length; i++){
+            if(fit[i] > maior){
+                maior = fit[i];
+                indexToRemove = i;
+            }
+        }
+        
+        if(indexToRemove != -1){
+            res.push(pop[indexToRemove]);
+            pop.pop(indexToRemove);
+            fit.pop(indexToRemove);
+        }
+
+    }
+
+    return res;
+}
+
+function getPopulationRanked(population,fitness){
+    pop = population.slice();
+    fit = fitness.slice();
+    for (var i = 0; i < pop.length; i++){
+
+        for (var j = 0; j < pop.length; j++){
+
+            if(i!=j){
+                if(fit[i] > fit[j]){
+                
+                
+                    swap(fit,i,j)
+                    swap(pop,i,j)
+                             
+                }
+            }
+        }         
+    }
+
+    return pop;
+    
+
+}
    
 function mutate(order,rate){
 

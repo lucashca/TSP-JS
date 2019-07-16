@@ -134,9 +134,9 @@ function draw(){
     timeNow = Date.now() - startTime;
     time = getTimeString(timeNow);
 
-    text("Best Time: "+bestTime, 20, 15*space);
-    text("Time: "+time, 20, 16*space);
-    
+    text("Best Time: "+bestTime, 20, height/2-3*space);
+    text("Time: "+time, 20, height/2-2*space);
+      
    
 
 }
